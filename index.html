@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    #calculator {
+      max-width: 300px;
+      margin: 50px auto;
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="calculator">
+    <input type="number" id="num1">
+    <input type="number" id="num2">
+    <button id="add">Add</button>
+    <button id="subtract">Subtract</button>
+    <button id="multiply">Multiply</button>
+    <button id="divide">Divide</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const calculator = {
+      add: (num1, num2) => num1 + num2,
+      subtract: (num1, num2) => num1 - num2,
+      multiply: (num1, num2) => num1 * num2,
+      divide: (num1, num2) => {
+        if (num2 === 0) {
+          throw new Error("Division by zero");
+        }
+        return num1 / num2;
+      }
+    };
+
+    const config = {
+      messages: {
+        success: "Result: ",
+        error: "Error: Division by zero is not allowed."
+      }
+    };
+
+    const addBtn = document.getElementById('add');
+    const subtractBtn = document.getElementById('subtract');
+    const multiplyBtn = document.getElementById('multiply');
+    const divideBtn = document.getElementById('divide');
+    const resultDiv = document.getElementById('result');
+    const previousResultsDiv = document.getElementById('previous-results');
+
+    let previousResults = [];
+
+    addBtn.addEventListener('click', () => {
+      const num1 = Number(document.getElementById('num1').value);
+      const num2 = Number(document.getElementById('num2').value);
+      const result = calculator.add(num1, num2);
+      // resultDiv.textContent = config.messages.success + result;
+      previousResults.push(result);
+      displayResult(result);
+    });
+
+    subtractBtn.addEventListener('click', () => {
+      const num1 = Number(document.getElementById('num1').value);
+      const num2 = Number(document.getElementById('num2').value);
+      const result = calculator.subtract(num1, num2);
+      //resultDiv.textContent = config.messages.success + result;
+      previousResults.push(result);
+      displayResult(result);
+    });
+
+    multiplyBtn.addEventListener('click', () => {
+      const num1 = Number(document.getElementById('num1').value);
+      const num2 = Number(document.getElementById('num2').value);
+      const result = calculator.multiply(num1, num2);
+      //resultDiv.textContent = config.messages.success + result;
+      previousResults.push(result);
+      displayResult(result);
+    });
+
+    divideBtn.addEventListener('click', () => {
+      const num1 = Number(document.getElementById('num1').value);
+      const num2 = Number(document.getElementById('num2').value);
+      try {
+        const result = calculator.divide(num1, num2);
+        //resultDiv.textContent = config.messages.success + result;
+        previousResults.push(result);
+        displayResult(result); 
+      } catch (error) {
+       // resultDiv.textContent = config.messages.error;
+       displayError();
+      }
+    });
+    function displayResult(result) {
+      resultDiv.textContent = config.messages.success + result;
+      updatePreviousResults();
+      
+    }
+    function displayError() {
+      resultDiv.textContent = config.messages.error;
+      updatePreviousResults();
+    }
+    function updatePreviousResults() {
+      previousResultsDiv.innerHTML = '';
+      previousResults.forEach((result, index) => {
+        const resultItem = document.createElement('div');
+        resultItem.textContent = `Result ${index + 1}: ${result}`;
+        previousResultsDiv.appendChild(resultItem);
+      });
+    }
+  </script>
+</body>
+</html>
